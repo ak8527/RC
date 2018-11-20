@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Rx Project</string>
+    <string name="image">Image</string>
+    <string name="rank">Rank</string>
+    <string name="rank1">Rank :</string>
+    <string name="country">Country :</string>
+    <string name="population">Population :</string>
 </resources>
