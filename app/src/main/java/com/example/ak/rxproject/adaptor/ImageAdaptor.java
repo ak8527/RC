@@ -22,8 +22,8 @@ import butterknife.ButterKnife;
 
 public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>{
 
-    private Context context;
-    private ArrayList<Items> items;
+    private final Context context;
+    private final ArrayList<Items> items;
 
     public ImageAdaptor(Context context, ArrayList<Items> items) {
         this.context = context;

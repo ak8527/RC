@@ -7,20 +7,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class Items implements Parcelable {
     @SerializedName("rank")
-    private String rank;
+    private final String rank;
     @SerializedName("country")
-    private String country;
+    private final String country;
     @SerializedName("population")
-    private String population;
+    private final String population;
     @SerializedName("flag")
-    private String flag;
+    private final String flag;
 
-    public Items(String rank, String country, String population, String flag) {
-        this.rank = rank;
-        this.country = country;
-        this.population = population;
-        this.flag = flag;
-    }
+//    public Items(String rank, String country, String population, String flag) {
+//        this.rank = rank;
+//        this.country = country;
+//        this.population = population;
+//        this.flag = flag;
+//    }
 
 
     private Items(Parcel in) {

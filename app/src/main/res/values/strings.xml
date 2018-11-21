@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">Rx Project</string>
+    <string name="app_name">RX</string>
     <string name="image">Image</string>
     <string name="rank">Rank</string>
     <string name="rank1">Rank :</string>
     <string name="country">Country :</string>
     <string name="population">Population :</string>
+    <string name="internet_is_not_available">Internet is not available.</string>
 </resources>

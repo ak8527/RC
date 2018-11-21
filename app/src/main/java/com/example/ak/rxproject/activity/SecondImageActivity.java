@@ -1,9 +1,7 @@
 package com.example.ak.rxproject.activity;
 
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.ak.rxproject.R;
@@ -13,6 +11,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@SuppressWarnings("WeakerAccess")
 public class SecondImageActivity extends AppCompatActivity {
 
     @BindView(R.id.fullIv)

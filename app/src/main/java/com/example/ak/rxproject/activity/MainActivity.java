@@ -1,8 +1,11 @@
 package com.example.ak.rxproject.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +17,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ak.rxproject.R;
 import com.example.ak.rxproject.adaptor.ImageAdaptor;
@@ -33,6 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressWarnings("WeakerAccess")
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_TELEPHONE_REQUEST_CODE = 111;
@@ -42,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView imageRv;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.connectionTv)
+    TextView connectionTv;
 
     private Disposable disposable;
 
@@ -58,7 +66,14 @@ public class MainActivity extends AppCompatActivity {
         imageRv.setLayoutManager(gridLayoutManager);
         imageRv.addItemDecoration(dividerItemDecoration);
 
-        makeNetworkCall();
+        if (getNetworkInfo()) {
+            makeNetworkCall();
+        } else {
+            connectionTv.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            Toast.makeText(this,"Sorry,Internet is not available!!!",Toast.LENGTH_SHORT).show();
+        }
+
 
 
     }
@@ -126,6 +141,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    private boolean getNetworkInfo(){
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return (activeNetwork != null &&
+                activeNetwork.isConnected());
+
+    }
 
     @Override
     protected void onDestroy() {

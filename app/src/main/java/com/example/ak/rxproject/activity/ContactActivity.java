@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ak.rxproject.R;
@@ -20,7 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,16 +25,13 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-
-import static io.reactivex.Flowable.fromArray;
 
 public class ContactActivity extends AppCompatActivity {
     @BindView(R.id.contactRv)
     RecyclerView recyclerView;
 
-    ArrayList<Contact> contactArrayList = new ArrayList<>();
+    private final ArrayList<Contact> contactArrayList = new ArrayList<>();
     ContactAdaptor contactAdaptor;
 
 
