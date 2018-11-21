@@ -1,5 +1,14 @@
 package com.example.ak.rxproject.activity;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -28,6 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int MY_TELEPHONE_REQUEST_CODE = 111;
     ArrayList<Items> itemsList = new ArrayList<>();
 
     @BindView(R.id.imageRv)
@@ -82,9 +92,34 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.contactFabBtn)
     public void contactOpen(){
-
+        Intent intent = new Intent(getBaseContext(),ContactActivity.class);
+        if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED   ) {
+            startActivity(intent);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_TELEPHONE_REQUEST_CODE);
+            }
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case MY_TELEPHONE_REQUEST_CODE :
+                          if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                                  && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                                Intent intent = new Intent(this,ContactActivity.class);
+                                startActivity(intent);
+                        }
+
+                        break;
+
+
+
+        }
+    }
 
     @Override
     protected void onDestroy() {
