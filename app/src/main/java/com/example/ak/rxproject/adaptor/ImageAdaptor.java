@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +16,9 @@ import com.example.ak.rxproject.model.Items;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnItemClick;
-import butterknife.OnItemSelected;
+
 
 public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>{
 
@@ -45,7 +40,6 @@ public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>
     @Override
     public void onBindViewHolder(@NonNull ImageHolder imageHolder, int i) {
         final Items item =  items.get(i);
-        Log.e("Adaptor", "onBindViewHolder: " + item.getFlag());
 
         Picasso.get()
                 .load(item.getFlag())
@@ -55,6 +49,7 @@ public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>
         imageHolder.rankTv.setText(item.getRank());
         imageHolder.countryTv.setText(item.getCountry());
         imageHolder.populationTv.setText(item.getPopulation());
+
     }
 
     @Override

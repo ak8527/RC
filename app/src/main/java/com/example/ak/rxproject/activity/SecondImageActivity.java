@@ -31,7 +31,6 @@ public class SecondImageActivity extends AppCompatActivity {
         }
 
         if (items != null){
-            Log.e("SecondActivity", "onCreate: " + items.getCountry());
             Picasso.get()
                     .load(items.getFlag())
                     .into(fullIv);

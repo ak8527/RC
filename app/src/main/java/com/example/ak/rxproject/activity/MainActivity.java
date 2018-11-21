@@ -1,10 +1,8 @@
 package com.example.ak.rxproject.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -12,10 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.ak.rxproject.R;
 import com.example.ak.rxproject.adaptor.ImageAdaptor;
@@ -42,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.imageRv)
     RecyclerView imageRv;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     private Disposable disposable;
 
@@ -52,41 +52,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        ApiInterface apiInterface = ApiClient.getRetrofit().create(ApiInterface.class);
 
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
         imageRv.setLayoutManager(gridLayoutManager);
         imageRv.addItemDecoration(dividerItemDecoration);
 
-        Observable<WorldPopulation> observable = apiInterface.getWorld().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-
-        observable.subscribe(new Observer<WorldPopulation>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                    disposable = d;
-            }
-
-            @Override
-            public void onNext(WorldPopulation worldPopulation) {
-                itemsList = (ArrayList<Items>) worldPopulation.getItemsList();
-                ImageAdaptor imageAdaptor = new ImageAdaptor(getBaseContext(),itemsList);
-                imageRv.setAdapter(imageAdaptor);
+        makeNetworkCall();
 
 
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
     }
 
 
@@ -116,10 +90,42 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
 
-
-
         }
     }
+
+
+    private void makeNetworkCall(){
+        ApiInterface apiInterface = ApiClient.getRetrofit().create(ApiInterface.class);
+        Observable<WorldPopulation> observable = apiInterface.getWorld().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+
+        observable.subscribe(new Observer<WorldPopulation>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
+
+            @Override
+            public void onNext(WorldPopulation worldPopulation) {
+                itemsList = (ArrayList<Items>) worldPopulation.getItemsList();
+                ImageAdaptor imageAdaptor = new ImageAdaptor(getBaseContext(),itemsList);
+                imageRv.setAdapter(imageAdaptor);
+
+
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
 
     @Override
     protected void onDestroy() {

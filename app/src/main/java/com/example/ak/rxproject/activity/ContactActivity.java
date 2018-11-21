@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.ak.rxproject.R;
 import com.example.ak.rxproject.adaptor.ContactAdaptor;
@@ -37,6 +38,10 @@ public class ContactActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     ArrayList<Contact> contactArrayList = new ArrayList<>();
+    ContactAdaptor contactAdaptor;
+
+
+    private Disposable disposable;
 
 
     @Override
@@ -44,93 +49,31 @@ public class ContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
         ButterKnife.bind(this);
-        Log.e("ContactActivity", "onCreate: ");
+        contactAdaptor = new ContactAdaptor(getBaseContext(),contactArrayList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+        recyclerView.setAdapter(contactAdaptor);
 
-        Log.e("ContactActivity", "onNext: before" );
-
-
-
-        final Snackbar snackbar = Snackbar.make(findViewById(R.id.contactLayout),"Contact saved to storage",Snackbar.LENGTH_LONG);
+        contactBackgroundTask();
 
 //
-        Observable<ArrayList<Contact>> contactObservable = Observable.just(getAllContact())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-        Log.e("ContactActivity", "onNext: after" );
-
-
-//
-
-        contactObservable.subscribe(new Observer<ArrayList<Contact>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(ArrayList<Contact> contacts) {
-
-                ContactAdaptor contactAdaptor = new ContactAdaptor(getBaseContext(),contacts);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-                recyclerView.setAdapter(contactAdaptor);
-
-                try {
-                    FileWriter fileWriter = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/" + "contact.csv");
-                    Log.e("ContactActivity", "onNext: " + Environment.getExternalStorageDirectory().toString() + "/" + "contact.csv");
-                    fileWriter.append("Name");
-                    fileWriter.append(',');
-                    fileWriter.append("Contact Number");
-                    fileWriter.append(',');
-                    fileWriter.append('\n');
-
-                    for (Contact contact : contacts) {
-                        fileWriter.append(contact.getContactName());
-                        fileWriter.append(',');
-                        fileWriter.append(contact.getContactNumber());
-                        fileWriter.append(',');
-                        fileWriter.append('\n');
-                    }
-
-                    fileWriter.close();
-
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-                snackbar.show();
-            }
-        });
-
-
     }
 
 
     public ArrayList<Contact> getAllContact(){
+
         ArrayList<Contact> contactLists = new ArrayList<>();
-//
+
         String[] projection = new String[] {
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
                 ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER,
-                //plus any other properties you wish to query
         };
 
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, null);
         } catch (SecurityException e) {
-            //SecurityException can be thrown if we don't have the right permissions
+            Toast.makeText(this,"Sorry, Contacts not found!!!",Toast.LENGTH_SHORT).show();
         }
 
         if (cursor != null) {
@@ -144,12 +87,9 @@ public class ContactActivity extends AppCompatActivity {
                     String normalizedNumber = cursor.getString(indexOfNormalizedNumber);
                     if (normalizedNumbersAlreadyFound.add(normalizedNumber)) {
                         String displayName = cursor.getString(indexOfDisplayName);
-                        Log.e("ContactActivity", "onNext: "  + displayName );
-
                         String displayNumber = cursor.getString(indexOfDisplayNumber);
                         contactLists.add(new Contact(displayName,displayNumber));
-                        //haven't seen this number yet: do something with this contact!
-                    }  //don't do anything with this contact because we've already found this number
+                    }
 
                 }
             } finally {
@@ -157,7 +97,86 @@ public class ContactActivity extends AppCompatActivity {
             }
         }
 
-
         return contactLists;
+    }
+
+
+
+
+
+
+    public void makeCsvFile(ArrayList<Contact> contacts){
+        try {
+            FileWriter fileWriter = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/" + "Contacts.csv");
+            fileWriter.append("Name");
+            fileWriter.append(',');
+            fileWriter.append("Contact Number");
+            fileWriter.append(',');
+            fileWriter.append('\n');
+
+            for (Contact contact : contacts) {
+                fileWriter.append(contact.getContactName());
+                fileWriter.append(',');
+                fileWriter.append(contact.getContactNumber());
+                fileWriter.append(',');
+                fileWriter.append('\n');
+            }
+
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void contactBackgroundTask(){
+
+        Observable<ArrayList<Contact>> contactObservable = Observable.just(getAllContact())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                ;
+
+
+        contactObservable.subscribe(new Observer<ArrayList<Contact>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+
+            }
+
+            @Override
+            public void onNext(ArrayList<Contact> contacts) {
+
+                contactArrayList.clear();
+                contactArrayList.addAll(contacts);
+                contactAdaptor.notifyDataSetChanged();
+
+                makeCsvFile(contacts);
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+               Snackbar snackbar = Snackbar.make(findViewById(R.id.contactLayout),"Contact saved to storage",Snackbar.LENGTH_SHORT);
+
+                snackbar.show();
+            }
+        });
+
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 }

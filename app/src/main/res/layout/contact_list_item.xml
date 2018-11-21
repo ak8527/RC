@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    tools:layout_editor_absoluteY="81dp">
+
+
+    <com.github.ivbaranov.mli.MaterialLetterIcon
+        android:id="@+id/contactIv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mli_letter_color="@android:color/white"
+        app:mli_letter_size="32"
+        app:mli_letters_number="1"
+        app:mli_shape_type="circle" />
 
 
     <TextView
         android:id="@+id/contactNameTv"
-        android:layout_width="match_parent"
+        style="@style/TextTheme"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/contactNumberTv"
+        app:layout_constraintStart_toEndOf="@+id/contactIv"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Display Name" />
 
 
     <TextView
         android:id="@+id/contactNumberTv"
-        android:layout_width="match_parent"
+        style="@style/SecondaryTextTheme"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contactNameTv" />
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/contactIv"
+        app:layout_constraintTop_toBottomOf="@+id/contactNameTv"
+        tools:text="Display Number" />
 
 
 </android.support.constraint.ConstraintLayout>

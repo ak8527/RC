@@ -14,6 +14,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="@string/image"
+        style="@style/TextTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +27,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/rank1"
+        style="@style/TextTheme"
+
         app:layout_constraintBottom_toTopOf="@+id/countryHtv"
         app:layout_constraintStart_toEndOf="@+id/listIv"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,8 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:text="@string/country"
+        style="@style/TextTheme"
+
         app:layout_constraintBottom_toTopOf="@+id/populationHtv"
         app:layout_constraintStart_toEndOf="@+id/listIv"
         app:layout_constraintTop_toBottomOf="@+id/rankHtv" />
@@ -46,9 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/population"
+        style="@style/TextTheme"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/listIv"
         app:layout_constraintTop_toBottomOf="@+id/countryHtv" />
@@ -59,7 +64,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Rank"
+        android:text="@string/rank"
+        style="@style/TextTheme"
+
         app:layout_constraintBottom_toTopOf="@+id/countryTv"
         app:layout_constraintStart_toEndOf="@+id/rankHtv"
         app:layout_constraintTop_toTopOf="parent" />
@@ -69,8 +76,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Country"
+        android:text="@string/country"
+        style="@style/TextTheme"
+
         app:layout_constraintBottom_toTopOf="@+id/populationTv"
         app:layout_constraintStart_toEndOf="@+id/countryHtv"
         app:layout_constraintTop_toBottomOf="@+id/rankTV" />
@@ -80,9 +88,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Population"
+        android:text="@string/population"
+        style="@style/TextTheme"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/populationHtv"
         app:layout_constraintTop_toBottomOf="@+id/countryTv" />
