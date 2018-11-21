@@ -8,9 +8,9 @@ public class WorldPopulation {
     @SerializedName("worldpopulation")
     private List<Items> itemsList;
 
-//    public WorldPopulation(List<Items> itemsList) {
-//        this.itemsList = itemsList;
-//    }
+    public WorldPopulation(List<Items> itemsList) {
+        this.itemsList = itemsList;
+    }
 
     public List<Items> getItemsList() {
         return itemsList;

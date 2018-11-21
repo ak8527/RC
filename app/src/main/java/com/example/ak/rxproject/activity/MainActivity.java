@@ -54,15 +54,16 @@ public class MainActivity extends AppCompatActivity {
     private Disposable disposable;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        // setting recyclerView for displaying country list.
+
         LinearLayoutManager gridLayoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         imageRv.setLayoutManager(gridLayoutManager);
         imageRv.addItemDecoration(dividerItemDecoration);
 
@@ -71,45 +72,55 @@ public class MainActivity extends AppCompatActivity {
         } else {
             connectionTv.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
-            Toast.makeText(this,"Sorry,Internet is not available!!!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sorry,Internet is not available!!!", Toast.LENGTH_SHORT).show();
         }
-
 
 
     }
 
 
+    /**
+     * Open Contact Activity on clicking floating action button and asking for runtime permission.
+     */
+
     @OnClick(R.id.contactFabBtn)
-    public void contactOpen(){
-        Intent intent = new Intent(getBaseContext(),ContactActivity.class);
+    public void contactOpen() {
+        Intent intent = new Intent(getBaseContext(), ContactActivity.class);
         if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED   ) {
+                ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             startActivity(intent);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_TELEPHONE_REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_TELEPHONE_REQUEST_CODE);
             }
         }
     }
+
+
+    /**
+     * Method for checking , if contacts and storage permission is granted.
+     */
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode) {
-            case MY_TELEPHONE_REQUEST_CODE :
-                          if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                                  && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                                Intent intent = new Intent(this,ContactActivity.class);
-                                startActivity(intent);
-                        }
-
-                        break;
-
+            case MY_TELEPHONE_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(this, ContactActivity.class);
+                    startActivity(intent);
+                }
+                break;
         }
     }
 
 
-    private void makeNetworkCall(){
+    /**
+     * Method for making network call on background thread using rxjava and retrofit.
+     */
+
+    private void makeNetworkCall() {
         ApiInterface apiInterface = ApiClient.getRetrofit().create(ApiInterface.class);
         Observable<WorldPopulation> observable = apiInterface.getWorld().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
 
@@ -122,16 +133,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(WorldPopulation worldPopulation) {
                 itemsList = (ArrayList<Items>) worldPopulation.getItemsList();
-                ImageAdaptor imageAdaptor = new ImageAdaptor(getBaseContext(),itemsList);
+                ImageAdaptor imageAdaptor = new ImageAdaptor(getBaseContext(), itemsList);
                 imageRv.setAdapter(imageAdaptor);
-
-
 
             }
 
             @Override
             public void onError(Throwable e) {
-
+                Toast.makeText(getBaseContext(), "Something wrong!!!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -142,7 +151,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean getNetworkInfo(){
+    /**
+     * @return internet connection state.
+     */
+
+    private boolean getNetworkInfo() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 

@@ -32,32 +32,38 @@ public class ContactActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     private final ArrayList<Contact> contactArrayList = new ArrayList<>();
-    ContactAdaptor contactAdaptor;
-
+    private ContactAdaptor contactAdaptor;
 
     private Disposable disposable;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
         ButterKnife.bind(this);
-        contactAdaptor = new ContactAdaptor(getBaseContext(),contactArrayList);
+
+
+        // setting recyclerView for displaying contacts.
+        contactAdaptor = new ContactAdaptor(getBaseContext(), contactArrayList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
         recyclerView.setAdapter(contactAdaptor);
 
         contactBackgroundTask();
 
-//
     }
 
 
-    public ArrayList<Contact> getAllContact(){
+    /**
+     * Method for fetch contacts from database.
+     *
+     * @return contactList.
+     */
+
+    public ArrayList<Contact> getAllContact() {
 
         ArrayList<Contact> contactLists = new ArrayList<>();
 
-        String[] projection = new String[] {
+        String[] projection = new String[]{
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
                 ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER,
@@ -67,7 +73,7 @@ public class ContactActivity extends AppCompatActivity {
         try {
             cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, null);
         } catch (SecurityException e) {
-            Toast.makeText(this,"Sorry, Contacts not found!!!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sorry, Contacts not found!!!", Toast.LENGTH_SHORT).show();
         }
 
         if (cursor != null) {
@@ -82,7 +88,7 @@ public class ContactActivity extends AppCompatActivity {
                     if (normalizedNumbersAlreadyFound.add(normalizedNumber)) {
                         String displayName = cursor.getString(indexOfDisplayName);
                         String displayNumber = cursor.getString(indexOfDisplayNumber);
-                        contactLists.add(new Contact(displayName,displayNumber));
+                        contactLists.add(new Contact(displayName, displayNumber));
                     }
 
                 }
@@ -95,11 +101,13 @@ public class ContactActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Method for making Contacts.csv text file
+     *
+     * @param contacts is used or writing contacts to Contacts.csv file.
+     */
 
-
-
-
-    public void makeCsvFile(ArrayList<Contact> contacts){
+    public void makeCsvFile(ArrayList<Contact> contacts) {
         try {
             FileWriter fileWriter = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/" + "Contacts.csv");
             fileWriter.append("Name");
@@ -125,12 +133,16 @@ public class ContactActivity extends AppCompatActivity {
     }
 
 
-    private void contactBackgroundTask(){
+    /**
+     * Method used for writing contact to Contacts.csv file in background.
+     */
+
+
+    private void contactBackgroundTask() {
 
         Observable<ArrayList<Contact>> contactObservable = Observable.just(getAllContact())
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                ;
+                .observeOn(AndroidSchedulers.mainThread());
 
 
         contactObservable.subscribe(new Observer<ArrayList<Contact>>() {
@@ -153,13 +165,12 @@ public class ContactActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-
+                Toast.makeText(getBaseContext(), "Something wrong!!!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onComplete() {
-               Snackbar snackbar = Snackbar.make(findViewById(R.id.contactLayout),"Contact saved to storage",Snackbar.LENGTH_SHORT);
-
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.contactLayout), "Contact saved to storage", Snackbar.LENGTH_SHORT);
                 snackbar.show();
             }
         });

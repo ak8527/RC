@@ -29,7 +29,7 @@ public class SecondImageActivity extends AppCompatActivity {
             items = data.getParcelable("items");
         }
 
-        if (items != null){
+        if (items != null) {
             Picasso.get()
                     .load(items.getFlag())
                     .into(fullIv);
