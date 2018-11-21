@@ -13,10 +13,10 @@
 <br/>
 <br/>
 
-<p float="middle">
+<q float="middle">
 <src="https://github.com/ak8527/RC/blob/master/raw/screenshot3.png" alt="alt text" width="240" height="427" >       
 
-</p>
+</q>
 
 
 <br/>
