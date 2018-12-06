@@ -107,7 +107,7 @@ public class ContactActivity extends AppCompatActivity {
      * @param contacts is used or writing contacts to Contacts.csv file.
      */
 
-    public void makeCsvFile(ArrayList<Contact> contacts) {
+    private void makeCsvFile(ArrayList<Contact> contacts) {
         try {
             FileWriter fileWriter = new FileWriter(Environment.getExternalStorageDirectory().toString() + "/" + "Contacts.csv");
             fileWriter.append("Name");

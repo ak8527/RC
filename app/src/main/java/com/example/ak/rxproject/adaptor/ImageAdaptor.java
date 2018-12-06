@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>{
 
     private final Context context;
-    private final ArrayList<Items> items;
+    private ArrayList<Items> items;
 
     public ImageAdaptor(Context context, ArrayList<Items> items) {
         this.context = context;
@@ -43,7 +43,6 @@ public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>
 
         Picasso.get()
                 .load(item.getFlag())
-                .placeholder(R.drawable.ic_launcher_foreground)
                 .into(imageHolder.imageView);
 
         imageHolder.rankTv.setText(item.getRank());
@@ -77,6 +76,7 @@ public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>
                 public void onClick(View v) {
                     Items item = items.get(getAdapterPosition());
                     Intent intent = new Intent(context,SecondImageActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("items",item);
                     context.startActivity(intent);
                 }
@@ -84,5 +84,10 @@ public class ImageAdaptor extends RecyclerView.Adapter<ImageAdaptor.ImageHolder>
         }
     }
 
+
+    public void updateList(ArrayList<Items> items) {
+        this.items = items;
+        notifyDataSetChanged();
+    }
 
 }

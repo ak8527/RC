@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.connectionTv)
     TextView connectionTv;
 
+    private ImageAdaptor imageAdaptor;
+
+
     private Disposable disposable;
 
 
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         imageRv.setLayoutManager(gridLayoutManager);
         imageRv.addItemDecoration(dividerItemDecoration);
+        imageAdaptor = new ImageAdaptor(getBaseContext(), itemsList);
+        imageRv.setAdapter(imageAdaptor);
 
         if (getNetworkInfo()) {
             makeNetworkCall();
@@ -134,9 +138,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(WorldPopulation worldPopulation) {
                 itemsList = (ArrayList<Items>) worldPopulation.getItemsList();
-                ImageAdaptor imageAdaptor = new ImageAdaptor(getBaseContext(), itemsList);
-                imageRv.setAdapter(imageAdaptor);
-
+                imageAdaptor.updateList(itemsList);
             }
 
             @Override

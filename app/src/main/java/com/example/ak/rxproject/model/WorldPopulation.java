@@ -6,7 +6,7 @@ import java.util.List;
 
 public class WorldPopulation {
     @SerializedName("worldpopulation")
-    private List<Items> itemsList;
+    private final List<Items> itemsList;
 
     public WorldPopulation(List<Items> itemsList) {
         this.itemsList = itemsList;
